@@ -13,7 +13,7 @@ const Settings: ProLayoutProps & {
   fixSiderbar: true,
   colorWeak: false,
   splitMenus: false,
-  title: 'Qi-API 接口开放平台',
+  title: '自动打卡',
   pwa: false,
   // logo: 'https://img.qimuu.icu/typory/logo.gif',
 };

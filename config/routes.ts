@@ -9,7 +9,6 @@
     },
     ],
   },
-  {path: '/welcome', name: '欢迎', icon: 'smile', component: './Welcome'},
   {path: '/clockIn', name: '打卡信息', icon:'LoginOutlined', component: './User/ClockIn'},
   {
     path: '/admin',
@@ -17,9 +16,9 @@
     icon: 'crown',
     access: 'canAdmin',
     routes: [
-      {name: '查询表格', icon: 'table', path: '/admin/list', component: './Admin/ClockInInfoList'},
+      {name: '打卡列表', icon: 'table', path: '/admin/list', component: './Admin/ClockInInfoList'},
     ],
   },
-  {path: '/', redirect: '/welcome'},
+  {path: '/', redirect: '/clockIn'},
   {path: '*', layout: false, component: './404'},
 ];

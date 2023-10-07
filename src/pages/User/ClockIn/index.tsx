@@ -15,7 +15,6 @@ import {EditOutlined, PoweroffOutlined} from "@ant-design/icons";
 import ModalForm from "@/pages/Admin/ClockInInfoList/components/ModalForm";
 import ClockInInfoModalFormColumns from "@/pages/Admin/ClockInInfoList/components/ClockInColumns";
 import {useModel} from "@umijs/max";
-import {PageContainer} from '@ant-design/pro-components';
 import EmailModal from "@/components/EmailModal";
 import {userBindEmailUsingPOST, userUnBindEmailUsingPOST} from "@/services/auto-clock-in/userController";
 import Settings from "../../../../config/defaultSettings";
@@ -208,10 +207,10 @@ const ClockIn: React.FC = () => {
   };
 
   return (
-    <PageContainer loading={loading}>
+    <>
       <Card title={'我的打卡信息'} extra={
         <>
-          <Tooltip title={"用于接收订单信息"}>
+          <Tooltip title={"用于接收打卡通知信息"}>
             <Button onClick={() => {
               setOpenEmailModal(true)
             }
@@ -310,7 +309,7 @@ const ClockIn: React.FC = () => {
       <EmailModal unbindSubmit={handleUnBindEmailSubmit} bindSubmit={handleBindEmailSubmit} data={loginUser}
                   onCancel={() => setOpenEmailModal(false)}
                   open={openEmailModal}/>
-    </PageContainer>
+    </>
   );
 };
 

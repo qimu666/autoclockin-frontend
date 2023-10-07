@@ -1,92 +1,23 @@
 import {PlusOutlined} from '@ant-design/icons';
-import type {ActionType, ProColumns, ProDescriptionsItemProps} from '@ant-design/pro-components';
-import {
-  FooterToolbar,
-  ModalForm,
-  PageContainer,
-  ProDescriptions,
-  ProForm,
-  ProFormRadio,
-  ProFormText,
-  ProFormTextArea,
-  ProTable,
-} from '@ant-design/pro-components';
+import type {ActionType, ProColumns} from '@ant-design/pro-components';
+import {FooterToolbar, PageContainer, ProTable,} from '@ant-design/pro-components';
 import '@umijs/max';
-import {Button, Drawer, message} from 'antd';
+import {Button, message, Popconfirm} from 'antd';
 import React, {useRef, useState} from 'react';
-import {addClockInInfoUsingPOST, listClockInInfoByPageUsingGET} from "@/services/auto-clock-in/clockInInfoController";
+import {
+  addClockInInfoUsingPOST,
+  deleteClockInInfoUsingPOST,
+  listClockInInfoByPageUsingGET,
+  updateClockInInfoUsingPOST
+} from "@/services/auto-clock-in/clockInInfoController";
+import {startingClockInUsingPOST, stopClockInUsingPOST} from "@/services/auto-clock-in/clockInController";
+import ModalForm from "@/pages/Admin/ClockInInfoList/components/ModalForm";
+import ClockInInfoModalFormColumns from "@/pages/Admin/ClockInInfoList/components/ClockInColumns";
 
 
-/**
- * @en-US Add node
- * @zh-CN 添加节点
- * @param fields
- */
-const handleAdd = async (fields: API.ClockInInfoAddRequest) => {
-  const hide = message.loading('正在添加');
-  try {
-    const res = await addClockInInfoUsingPOST({
-      ...fields,
-    });
-    console.log(res, 'handleAdd')
-    hide();
-    message.success('Added successfully');
-    return true;
-  } catch (error) {
-    hide();
-    message.error('Adding failed, please try again!');
-    return false;
-  }
-};
-
-
-/**
- * @en-US Update node
- * @zh-CN 更新节点
- *
- * @param fields
- */
-// const handleUpdate = async (fields: FormValueType) => {
-//   const hide = message.loading('Configuring');
-//   try {
-//     await updateRule({
-//       name: fields.name,
-//       desc: fields.desc,
-//       key: fields.key,
-//     });
-//     hide();
-//     message.success('Configuration is successful');
-//     return true;
-//   } catch (error) {
-//     hide();
-//     message.error('Configuration failed, please try again!');
-//     return false;
-//   }
-// };
-
-/**
- *  Delete node
- * @zh-CN 删除节点
- *
- * @param selectedRows
- */
-// const handleRemove = async (selectedRows: API.RuleListItem[]) => {
-//   const hide = message.loading('正在删除');
-//   if (!selectedRows) return true;
-//   try {
-//     await removeRule({
-//       key: selectedRows.map((row) => row.key),
-//     });
-//     hide();
-//     message.success('Deleted successfully and will refresh soon');
-//     return true;
-//   } catch (error) {
-//     hide();
-//     message.error('Delete failed, please try again');
-//     return false;
-//   }
-// };
 const ClockInInfoList: React.FC = () => {
+  const [selectedRowsState, setSelectedRows] = useState<API.RuleListItem[]>([]);
+
   /**
    * @en-US Pop-up window of new window
    * @zh-CN 新建窗口的弹窗
@@ -97,19 +28,148 @@ const ClockInInfoList: React.FC = () => {
    * @zh-CN 分布更新窗口的弹窗
    * */
   const [updateModalOpen, handleUpdateModalOpen] = useState<boolean>(false);
-  const [showDetail, setShowDetail] = useState<boolean>(false);
   const actionRef = useRef<ActionType>();
-  const [currentRow, setCurrentRow] = useState<API.RuleListItem>();
-  const [selectedRowsState, setSelectedRows] = useState<API.RuleListItem[]>([]);
+  const [currentRow, setCurrentRow] = useState<API.ClockInInfo>();
+
+  /**
+   * @en-US Add node
+   * @zh-CN 添加节点
+   * @param fields
+   */
+  const handleAdd = async (fields: API.ClockInInfoAddRequest) => {
+    const hide = message.loading('正在添加');
+    try {
+      const res = await addClockInInfoUsingPOST({
+        ...fields,
+      });
+      if (res.data && res.code === 0) {
+        hide();
+        message.success('添加成功');
+        return true;
+      }
+    } catch (error: any) {
+      hide();
+      message.error('添加失败! ' + error.message);
+      return false;
+    }
+  };
+
+  /**
+   * @en-US Update node
+   * @zh-CN 更新节点
+   *
+   * @param fields
+   */
+  const handleUpdate = async (fields: API.ClockInInfoUpdateRequest) => {
+    const hide = message.loading('修改中');
+    try {
+      const res = await updateClockInInfoUsingPOST({id: currentRow?.id, ...fields});
+      if (res.data && res.code === 0) {
+        hide();
+        message.success('修改成功');
+        return true;
+      }
+    } catch (error: any) {
+      hide();
+      message.error('修改失败' + error.message);
+      return false;
+    }
+  };
+
+
+  /**
+   * @en-US Update node
+   * @zh-CN 发布
+   *
+   * @param record
+   */
+  const handleOnline = async (record: API.IdRequest) => {
+    const hide = message.loading('启动中');
+    if (!record) return true;
+    try {
+      const res = await startingClockInUsingPOST({
+        id: record.id,
+      });
+      hide();
+      if (res.data) {
+        message.success('启动成功');
+        actionRef.current?.reload();
+      }
+      return true;
+    } catch (error: any) {
+      hide();
+      message.error(error.message);
+      return false;
+    }
+  };
+
+  /**
+   * @en-US Update node
+   * @zh-CN 下线
+   *
+   * @param record
+   */
+  const handleOffline = async (record: API.IdRequest) => {
+    const hide = message.loading('暂停中');
+    if (!record) return true;
+    try {
+      const res = await stopClockInUsingPOST({
+        id: record.id,
+      });
+      hide();
+      if (res.data) {
+        message.success('暂停成功');
+        actionRef.current?.reload();
+      }
+      return true;
+    } catch (error: any) {
+      hide();
+      message.error(error.message);
+      return false;
+    }
+  };
+
+  /**
+   *  Delete node
+   * @zh-CN 删除节点
+   *
+   * @param record
+   */
+  const handleRemove = async (record: API.ClockInInfo) => {
+    const hide = message.loading('正在删除');
+    if (!record) return true;
+    try {
+      const res = await deleteClockInInfoUsingPOST({
+        id: record.id,
+      });
+      hide();
+      if (res.data) {
+        message.success('删除成功');
+        actionRef.current?.reload();
+      }
+      return true;
+    } catch (error: any) {
+      hide();
+      message.error('删除失败', error.message);
+      return false;
+    }
+  };
 
   /**
    * @en-US International configuration
    * @zh-CN 国际化配置
    * */
+  const confirm = async () => {
+    await handleRemove(currentRow as API.ClockInInfo);
+  };
+
+  const cancel = () => {
+    message.success('取消成功');
+  };
 
   const columns: ProColumns<API.ClockInInfo>[] = [
     {
-      title: '地址',
+      title: '打卡地址',
       dataIndex: 'address',
       copyable: true,
       valueType: 'text',
@@ -151,20 +211,28 @@ const ClockInInfoList: React.FC = () => {
       key: 'status',
       valueEnum: {
         0: {
-          text: '已下线',
-          status: 'Error',
+          text: '未开启',
+          status: 'Default',
         },
         1: {
-          text: '已上线',
+          text: '打卡中',
           status: 'Processing',
+        },
+        2: {
+          text: '今日已打卡',
+          status: 'Success',
+        },
+        3: {
+          text: '打卡失败',
+          status: 'Error',
         },
       },
     },
     {
-      title: '更新时间',
-      dataIndex: 'updateTime',
-      valueType: 'dateTime',
-      key: 'updateTime',
+      title: '打卡时间',
+      dataIndex: 'clockInTime',
+      valueType: 'time',
+      key: 'clockInTime',
     },
     {
       title: '创建时间',
@@ -178,17 +246,66 @@ const ClockInInfoList: React.FC = () => {
       valueType: 'option',
       render: (_, record) => [
         <a
-          key="config"
+          key="update"
           onClick={() => {
-            handleUpdateModalOpen(true);
             setCurrentRow(record);
+            handleUpdateModalOpen(true);
           }}
         >
-          配置
+          修改
         </a>,
-        <a key="subscribeAlert" href="@/pages/Admin/InterfaceInfoList/index">
-          订阅警报
-        </a>,
+        record.status === 0 ? (
+          <a
+            type="text"
+            key="auditing"
+            onClick={() => {
+              handleOnline(record);
+            }}
+          >
+            开始打卡
+          </a>
+        ) : null,
+        record.status === 2 ? (
+          <a
+            type="text"
+            key="online"
+            onClick={() => {
+              handleOnline(record);
+            }}
+          >
+            暂停打卡
+          </a>
+        ) : null,
+        record.status === 1 ? (
+          <a
+            type="text"
+            key="offline"
+            style={{color: "red"}}
+            onClick={() => {
+              handleOffline(record);
+            }}
+          >
+            暂停打卡
+          </a>
+        ) : null,
+        <Popconfirm
+          key={'Delete'}
+          title="请确认是否删除该打卡信息!"
+          onConfirm={confirm}
+          onCancel={cancel}
+          okText="Yes"
+          cancelText="No"
+        >
+          <a
+            key="Remove"
+            style={{color: "red"}}
+            onClick={async () => {
+              setCurrentRow(record);
+            }}
+          >
+            删除
+          </a>
+        </Popconfirm>,
       ],
     },
   ];
@@ -266,29 +383,16 @@ const ClockInInfoList: React.FC = () => {
           <Button type="primary">批量审批</Button>
         </FooterToolbar>
       )}
+
       <ModalForm
-        title={'添加接口'}
-        width="740px"
-        open={createModalOpen}
-        autoFocusFirstInput
-        onOpenChange={handleModalOpen}
-        submitter={{
-          render: (props, defaultDoms) => {
-            return [
-              ...defaultDoms,
-              <Button
-                key="extra-reset"
-                onClick={() => {
-                  props.reset();
-                }}
-              >
-                重置
-              </Button>,
-            ];
-          },
+        title={"添加打卡信息"}
+        value={{}}
+        open={() => {
+          return createModalOpen;
         }}
-        onFinish={async (value) => {
-          const success = await handleAdd(value as API.ClockInInfoAddRequest);
+        onOpenChange={handleModalOpen}
+        onSubmit={async (value) => {
+          const success = await handleAdd(value as API.ClockInInfo);
           if (success) {
             handleModalOpen(false);
             if (actionRef.current) {
@@ -296,111 +400,31 @@ const ClockInInfoList: React.FC = () => {
             }
           }
         }}
-      >
-        <ProForm.Group>
-          <ProFormText
-            label={'接口名称'}
-            rules={[
-              {
-                required: true,
-                message: '接口名称为必填项',
-              },
-            ]}
-            width="md"
-            name="name"
-          />
-          <ProFormText
-            rules={[
-              {
-                required: true,
-                message: '接口地址为必填项',
-              },
-            ]}
-            label={'接口地址'}
-            width="md"
-            name="url"
-          />
-        </ProForm.Group>
-        <ProFormRadio.Group
-          rules={[{required: true, message: '接口请求方法为必填项'}]}
-          name="method"
-          layout="horizontal"
-          label="请求方法"
-          initialValue={'GET'}
-          options={[
-            {
-              label: 'GET',
-              value: 'GET',
-            },
-            {
-              label: 'POST',
-              value: 'POST',
-            },
-            {
-              label: 'PUT',
-              value: 'PUT',
-            },
-            {
-              label: 'DELETE',
-              value: 'DELETE',
-            }
-          ]}
-        />
-        <ProForm.Group>
-          <ProFormTextArea
-            label={'接口描述'}
-            width="md"
-            name="description"
-          />
-          <ProFormTextArea
-            label={'请求参数'}
-            width="md"
-            name="requestParams"
-          />
-        </ProForm.Group>
-        <ProForm.Group>
-          <ProFormTextArea
-            label={'响应头'}
-            width="md"
-            name="responseHeader"
-          />
-          <ProFormTextArea
-            label={'请求头'}
-            width="md"
-            name="requestHeader"
-          />
-        </ProForm.Group>
-        <ProForm.Group>
-          <ProFormTextArea
-            label={'请求示例'}
-            width="md"
-            name="requestExample"
-          /></ProForm.Group>
-      </ModalForm>
-
-      <Drawer
-        width={600}
-        open={showDetail}
-        onClose={() => {
-          setCurrentRow(undefined);
-          setShowDetail(false);
+        onCancel={() => handleModalOpen(false)}
+        columns={ClockInInfoModalFormColumns} width={"480px"}
+        size={"large"}
+      />
+      <ModalForm
+        title={"修改打卡信息"}
+        open={() => {
+          return updateModalOpen;
         }}
-        closable={false}
-      >
-        {currentRow?.name && (
-          <ProDescriptions<API.ClockInInfo>
-            column={2}
-            title={currentRow?.name}
-            request={async () => ({
-              data: currentRow || {},
-            })}
-            params={{
-              id: currentRow?.name,
-            }}
-            columns={columns as ProDescriptionsItemProps<API.ClockInInfo>[]}
-          />
-        )}
-      </Drawer>
+        value={currentRow}
+        onOpenChange={handleUpdateModalOpen}
+        onSubmit={async (value) => {
+          const success = await handleUpdate(value as API.ClockInInfo);
+          if (success) {
+            handleUpdateModalOpen(false);
+            if (actionRef.current) {
+              actionRef.current.reload();
+            }
+          }
+        }}
+        onCancel={() => handleUpdateModalOpen(false)}
+        columns={ClockInInfoModalFormColumns} width={"480px"}
+        size={"large"}
+      />
+
     </PageContainer>
   );
 };
