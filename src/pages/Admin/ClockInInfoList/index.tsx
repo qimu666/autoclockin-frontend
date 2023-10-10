@@ -176,6 +176,20 @@ const ClockInInfoList: React.FC = () => {
       ellipsis: true,
     },
     {
+      title: '打卡账号',
+      dataIndex: 'clockInAccount',
+      copyable: true,
+      valueType: 'text',
+      ellipsis: true,
+    },
+    {
+      title: '打卡密码',
+      dataIndex: 'clockPassword',
+      copyable: true,
+      valueType: 'text',
+      ellipsis: true,
+    },
+    {
       title: '设备ID',
       dataIndex: 'deviceId',
       valueType: 'text',
