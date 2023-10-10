@@ -17,12 +17,6 @@ declare namespace API {
     message?: string;
   };
 
-  type BaseResponseListPost = {
-    code?: number;
-    data?: Post[];
-    message?: string;
-  };
-
   type BaseResponseListUserVO = {
     code?: number;
     data?: UserVO[];
@@ -41,21 +35,9 @@ declare namespace API {
     message?: string;
   };
 
-  type BaseResponsePagePost = {
-    code?: number;
-    data?: PagePost;
-    message?: string;
-  };
-
   type BaseResponsePageUserVO = {
     code?: number;
     data?: PageUserVO;
-    message?: string;
-  };
-
-  type BaseResponsePost = {
-    code?: number;
-    data?: Post;
     message?: string;
   };
 
@@ -73,7 +55,9 @@ declare namespace API {
 
   type ClockInInfo = {
     address?: string;
+    clockInAccount?: string;
     clockInTime?: string;
+    clockPassword?: string;
     createTime?: string;
     deviceId?: string;
     deviceType?: string;
@@ -88,14 +72,18 @@ declare namespace API {
 
   type ClockInInfoAddRequest = {
     address?: string;
+    clockInAccount?: string;
     clockInTime?: string;
+    clockPassword?: string;
     deviceId?: string;
     deviceType?: string;
   };
 
   type ClockInInfoUpdateRequest = {
     address?: string;
+    clockInAccount?: string;
     clockInTime?: string;
+    clockPassword?: string;
     deviceId?: string;
     deviceType?: string;
     id?: number;
@@ -114,11 +102,6 @@ declare namespace API {
   };
 
   type getClockInInfoByIdUsingGETParams = {
-    /** id */
-    id?: number;
-  };
-
-  type getPostByIdUsingGETParams = {
     /** id */
     id?: number;
   };
@@ -157,40 +140,6 @@ declare namespace API {
     sortField?: string;
     sortOrder?: string;
     status?: number;
-    userId?: number;
-  };
-
-  type listPostByPageUsingGETParams = {
-    age?: number;
-    contact?: string;
-    content?: string;
-    current?: number;
-    education?: string;
-    gender?: number;
-    job?: string;
-    loveExp?: string;
-    pageSize?: number;
-    place?: string;
-    reviewStatus?: number;
-    sortField?: string;
-    sortOrder?: string;
-    userId?: number;
-  };
-
-  type listPostUsingGETParams = {
-    age?: number;
-    contact?: string;
-    content?: string;
-    current?: number;
-    education?: string;
-    gender?: number;
-    job?: string;
-    loveExp?: string;
-    pageSize?: number;
-    place?: string;
-    reviewStatus?: number;
-    sortField?: string;
-    sortOrder?: string;
     userId?: number;
   };
 
@@ -320,19 +269,6 @@ declare namespace API {
     total?: number;
   };
 
-  type PagePost = {
-    countId?: string;
-    current?: number;
-    maxLimit?: number;
-    optimizeCountSql?: boolean;
-    orders?: OrderItem[];
-    pages?: number;
-    records?: Post[];
-    searchCount?: boolean;
-    size?: number;
-    total?: number;
-  };
-
   type PageUserVO = {
     countId?: string;
     current?: number;
@@ -344,54 +280,6 @@ declare namespace API {
     searchCount?: boolean;
     size?: number;
     total?: number;
-  };
-
-  type Post = {
-    age?: number;
-    contact?: string;
-    content?: string;
-    createTime?: string;
-    education?: string;
-    gender?: number;
-    id?: number;
-    isDelete?: number;
-    job?: string;
-    loveExp?: string;
-    photo?: string;
-    place?: string;
-    reviewMessage?: string;
-    reviewStatus?: number;
-    thumbNum?: number;
-    updateTime?: string;
-    userId?: number;
-    viewNum?: number;
-  };
-
-  type PostAddRequest = {
-    age?: number;
-    contact?: string;
-    content?: string;
-    education?: string;
-    gender?: number;
-    job?: string;
-    loveExp?: string;
-    photo?: string;
-    place?: string;
-  };
-
-  type PostUpdateRequest = {
-    age?: number;
-    contact?: string;
-    content?: string;
-    education?: string;
-    gender?: number;
-    id?: number;
-    job?: string;
-    loveExp?: string;
-    photo?: string;
-    place?: string;
-    reviewMessage?: string;
-    reviewStatus?: number;
   };
 
   type User = {

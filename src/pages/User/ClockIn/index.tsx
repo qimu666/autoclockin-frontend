@@ -21,6 +21,14 @@ import Settings from "../../../../config/defaultSettings";
 import {valueLength} from '@/components/RightContent/AvatarDropdown';
 import Paragraph from "antd/lib/typography/Paragraph";
 
+const generateDeviceId = () => {
+  const characters = '0123456789abcdef';
+  let deviceId = '';
+  for (let i = 0; i < 40; i++) {
+    deviceId += characters.charAt(Math.floor(Math.random() * characters.length));
+  }
+  return deviceId;
+}
 const formatDate = (dateString: any) => {
   const date = new Date(dateString);
   const year = date.getFullYear();
@@ -41,6 +49,7 @@ const ClockIn: React.FC = () => {
   const [notWrite, setNotWrite] = useState(false);
   const [openEmailModal, setOpenEmailModal] = useState(false);
 
+
   const statusEnum: any = {
     0: "未开启",
     1: "打卡中",
@@ -51,7 +60,7 @@ const ClockIn: React.FC = () => {
     const isWrite = await isNotWriteUsingPOST();
     if (isWrite.data) {
       setNotWrite(true)
-      handleModalOpen(false)
+      handleModalOpen(true)
       return
     }
   }
@@ -107,11 +116,11 @@ const ClockIn: React.FC = () => {
     }
   };
 
-  const handleUpdate = async (fields: API.ClockInInfoAddRequest) => {
+  const handleUpdate = async (fields: API.ClockInInfoUpdateRequest) => {
     const hide = message.loading('修改中...');
     try {
       hide();
-      const res = await updateClockInInfoUsingPOST({...fields});
+      const res = await updateClockInInfoUsingPOST({id: data?.id, ...fields});
       if (res.data && res.code === 0) {
         message.success('修改成功');
         handleUpdateModalOpen(false);
@@ -139,6 +148,11 @@ const ClockIn: React.FC = () => {
     }
   };
   const items: DescriptionsProps['items'] = [
+    {
+      key: '8',
+      label: '打卡账号',
+      children:<span>{data?.clockInAccount}</span>
+    },
     {
       key: '1',
       label: '设备型号',
@@ -282,7 +296,7 @@ const ClockIn: React.FC = () => {
       </Card>
       <ModalForm
         title={"添加打卡信息"}
-        value={{}}
+        value={{deviceId: generateDeviceId()}}
         open={() => {
           return createModalOpen;
         }}

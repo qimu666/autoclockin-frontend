@@ -90,6 +90,12 @@ const Login: React.FC = () => {
             minWidth: 280,
             maxWidth: '75vw',
           }}
+          submitter={
+            {
+              searchConfig: {
+                submitText: "注册"
+              }
+            }}
           logo={<img alt="logo" src="/logo.svg"/>}
           title="自动打卡"
           subTitle={'简洁高效，一键即可自动打卡'}

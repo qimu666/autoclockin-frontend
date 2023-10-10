@@ -1,5 +1,6 @@
 import {ProFormColumnsType} from '@ant-design/pro-components';
 
+
 export const ClockInInfoModalFormColumns: ProFormColumnsType<API.ClockInInfo, "text">[] = [
   {
     title: 'id',
@@ -9,7 +10,43 @@ export const ClockInInfoModalFormColumns: ProFormColumnsType<API.ClockInInfo, "t
     key: "id"
   },
   {
-    title: <span>设备类型 ( 例: Xiaomi|Mi 10 Pro|11 )</span>,
+    tooltip: "职校家园账号",
+    title: '职校家园账号',
+    dataIndex: 'clockInAccount',
+    key: "clockInAccount",
+    formItemProps: {
+      rules: [
+        {
+          required: true,
+          message: '职校家园账号是必填项',
+        },
+      ],
+    },
+    width: 'lg',
+    colProps: {
+      span: 24,
+    },
+  },
+  {
+    tooltip: "职校家园密码",
+    title: '职校家园密码',
+    dataIndex: 'clockPassword',
+    key: "clockPassword",
+    formItemProps: {
+      rules: [
+        {
+          required: true,
+          message: '职校家园密码是必填项',
+        },
+      ],
+    },
+    width: 'lg',
+    colProps: {
+      span: 24,
+    },
+  },
+  {
+    title: <span>设备类型 ( 例: Xiaomi|Mi 10 Pro|11 ) <br/>格式:手机品牌英文名称|手机代号|安卓系统版本</span>,
     dataIndex: 'deviceType',
     tooltip: "格式:手机品牌英文名称|手机代号|安卓系统版本",
     key: "deviceType",
@@ -46,7 +83,8 @@ export const ClockInInfoModalFormColumns: ProFormColumnsType<API.ClockInInfo, "t
   },
   {
     tooltip: "设备ID",
-    title: <a target={"_blank"} href={'http://did.sxba.xuanran.cc/'} rel="noreferrer">点我获取随机设备ID,获取后填入</a>,
+    title: <span>真实设备id,或者<a target={"_blank"} href={'http://did.sxba.xuanran.cc/'}
+                                   rel="noreferrer">点我获取随机设备ID,获取后填入</a></span>,
     dataIndex: 'deviceId',
     key: "deviceId",
     formItemProps: {

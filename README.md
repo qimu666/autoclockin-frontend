@@ -1,57 +1,68 @@
-# Ant Design Pro
+<p align="center">
+    <img src=https://img.qimuu.icu/typory/logo.gif width=188/>
+</p>
 
-This project is initialized with [Ant Design Pro](https://pro.ant.design). Follow is the quick guide for how to use.
+<h1 align="center">Auto Clock In 自动打卡</h1>
+<p align="center"><strong>职校家园自动打卡助手</strong></p>
 
-## Environment Prepare
+<div align="center">
+    <img alt="Maven" src="https://raster.shields.io/badge/Maven-3.8.1-red.svg"/>
+   <img alt="SpringBoot" src="https://raster.shields.io/badge/SpringBoot-2.7+-green.svg"/>
+  <a href="https://github.com/qimu666/autoclockin-backend" target="_blank"><img src='https://img.shields.io/github/forks/qimu666/autoclockin-backend' alt='GitHub forks' class="no-zoom"></a>
+  <a href="https://github.com/qimu666/autoclockin-backend" target="_blank"><img src='https://img.shields.io/github/stars/qimu666/autoclockin-backend' alt='GitHub stars' class="no-zoom"></a>
+</div>
 
-Install `node_modules`:
+### 告知 ⚠️
 
-```bash
-npm install
-```
+1. **使用此项目造成任何损失均由个人承担。**
+3. **在开始之前请帮我点一下右上角的star。**
+5. **禁止任何平台或个人将此项目用于盈利或违法！**
+4. **此项目仅限学习交流，禁止用于任何商业或违法用途！**
 
-or
+### 导航 🧭
 
-```bash
-yarn
-```
+- **[Auto Clock In 自动打卡前端代码](https://github.com/qimu666/autoclockin-frontend)**
+- **[Auto Clock In 自动打卡后端代码](https://github.com/qimu666/autoclockin-backend)**
 
-## Provided Scripts
+### 快速开始 🚀
 
-Ant Design Pro provides some useful script to help you quick start and build with web project, code style check and test.
 
-Scripts provided in `package.json`. It's safe to modify or add additional script:
+### 前端
 
-### Start project
+环境要求：Node.js >= 16
 
-```bash
-npm start
-```
-
-### Build project
-
-```bash
-npm run build
-```
-
-### Check code style
+安装依赖：
 
 ```bash
-npm run lint
+yarn or  npm install
 ```
 
-You can also use script to auto fix some lint error:
+启动：
 
 ```bash
-npm run lint:fix
+yarn run dev or npm run start:dev
 ```
 
-### Test code
+部署：
 
 ```bash
-npm test
+yarn build or npm run build
 ```
 
-## More
+### 后端
 
-You can view full document on our [official website](https://pro.ant.design). And welcome any feedback in our [github](https://github.com/ant-design/ant-design-pro).
+执行sql目录下ddl.sql
+
+修改`todo`配置
+
+![image-20231010145018691](https://img.qimuu.icu/typory/image-20231010145018691.png)
+
+### 贡献 🤝
+
+如果您想为 **[Auto Clock In 自动打卡](https://github.com/qimu666/autoclockin-backend)**  做出贡献，请随时提交拉取请求。我们始终在寻找方法来改进项目，使其对像您这样的开发者更有用。
+
+### 联系我们 📩
+
+如果您对 **[Auto Clock In 自动打卡](https://github.com/qimu666/autoclockin-backend)**   平台有任何问题或建议，请随时联系我们:📩邮箱：2483482026@qq.com。
+
+感谢您使用 **[Auto Clock In 自动打卡](https://github.com/qimu666/autoclockin-backend)**   ！ 😊

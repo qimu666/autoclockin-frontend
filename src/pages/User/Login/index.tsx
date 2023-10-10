@@ -9,7 +9,7 @@ import {
 import {LoginForm, ProFormCheckbox, ProFormText,} from '@ant-design/pro-components';
 import {useEmotionCss} from '@ant-design/use-emotion-css';
 import {Helmet, history, useModel} from '@umijs/max';
-import {Alert, message, Tabs} from 'antd';
+import {message, Tabs} from 'antd';
 import React, {useState} from 'react';
 import Settings from '../../../../config/defaultSettings';
 import {userLoginUsingPOST} from "@/services/auto-clock-in/userController";
@@ -37,38 +37,8 @@ const ActionIcons = () => {
     </>
   );
 };
-// const Lang = () => {
-//   useEmotionCss(({token}) => {
-//     return {
-//       width: 42,
-//       height: 42,
-//       lineHeight: '42px',
-//       position: 'fixed',
-//       right: 16,
-//       borderRadius: token.borderRadius,
-//       ':hover': {
-//         backgroundColor: token.colorBgTextHover,
-//       },
-//     };
-//   });
-//   return;
-// };
-const LoginMessage: React.FC<{
-  content: string;
-}> = ({content}) => {
-  return (
-    <Alert
-      style={{
-        marginBottom: 24,
-      }}
-      message={content}
-      type="error"
-      showIcon
-    />
-  );
-};
+
 const Login: React.FC = () => {
-  const [userLoginState] = useState<API.LoginResult>({});
   const [type, setType] = useState<string>('account');
   const {setInitialState} = useModel('@@initialState');
   const containerClassName = useEmotionCss(() => {
@@ -95,8 +65,6 @@ const Login: React.FC = () => {
           history.push(urlParams.get('redirect') || '/');
         }, 100);
         setInitialState({loginUser: res.data, settings: Settings})
-      } else {
-        message.error(res.message);
       }
     } catch (error) {
       const defaultLoginFailureMessage = '登录失败，请重试！';
