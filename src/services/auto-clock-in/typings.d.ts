@@ -11,6 +11,12 @@ declare namespace API {
     message?: string;
   };
 
+  type BaseResponseClockInInfoVo = {
+    code?: number;
+    data?: ClockInInfoVo;
+    message?: string;
+  };
+
   type BaseResponseListClockInInfo = {
     code?: number;
     data?: ClockInInfo[];
@@ -90,6 +96,23 @@ declare namespace API {
     latitude?: string;
     longitude?: string;
     status?: number;
+  };
+
+  type ClockInInfoVo = {
+    address?: string;
+    clockInAccount?: string;
+    clockInTime?: string;
+    clockPassword?: string;
+    createTime?: string;
+    description?: string;
+    deviceId?: string;
+    deviceType?: string;
+    id?: number;
+    latitude?: string;
+    longitude?: string;
+    status?: number;
+    updateTime?: string;
+    userId?: number;
   };
 
   type DeleteRequest = {
