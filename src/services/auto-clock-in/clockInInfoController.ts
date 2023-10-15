@@ -38,7 +38,7 @@ export async function getClockInInfoByIdUsingGET(
   params: API.getClockInInfoByIdUsingGETParams,
   options?: { [key: string]: any },
 ) {
-  return request<API.BaseResponseClockInInfo>('/api/clockInInfo/get', {
+  return request<API.BaseResponseClockInInfoVo>('/api/clockInInfo/get', {
     method: 'GET',
     params: {
       ...params,

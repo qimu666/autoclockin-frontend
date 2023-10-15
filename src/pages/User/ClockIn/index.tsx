@@ -40,7 +40,7 @@ const formatDate = (dateString: any) => {
   return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 }
 const ClockIn: React.FC = () => {
-  const [data, setDate] = useState<API.ClockInInfo>();
+  const [data, setDate] = useState<API.ClockInInfoVo>();
   const [createModalOpen, handleModalOpen] = useState<boolean>(false);
   const [updateModalOpen, handleUpdateModalOpen] = useState<boolean>(false);
   const {initialState, setInitialState} = useModel('@@initialState');
@@ -151,7 +151,7 @@ const ClockIn: React.FC = () => {
     {
       key: '8',
       label: '打卡账号',
-      children:<span>{data?.clockInAccount}</span>
+      children: <span>{data?.clockInAccount}</span>
     },
     {
       key: '1',
@@ -165,6 +165,11 @@ const ClockIn: React.FC = () => {
       key: '5',
       label: '打卡时间',
       children: <p>{data?.clockInTime}</p>,
+    },
+    {
+      key: '9',
+      label: '打卡状态描述',
+      children: <p>{valueLength(data?.description) ? data?.description : "暂无描述"}</p>,
     },
     {
       key: '7',
@@ -290,6 +295,23 @@ const ClockIn: React.FC = () => {
               </Popconfirm>
               : null
           }
+          {data?.status === 3 ?
+            <span onClick={async () => {
+              const res = await startingClockInUsingPOST({id: data?.id})
+              if (res.data && res.code === 0) {
+                if (!loginUser?.email) {
+                  message.error("您未绑定邮箱，将无法接收到打卡通知！")
+                }
+                await toClockInUsingPOST()
+                message.success('打卡开启成功');
+                setTimeout(() => {
+                  loadedData()
+                }, 300)
+              }
+            }}
+                  style={{fontSize: 14, color: "#3498db"}}>
+            重新打卡 <br/><PoweroffOutlined
+              key={'PoweroffOutlined'}/></span> : null}
         </>,
       ]}>
         {data ? <Descriptions column={1} items={items}/> : <p>暂无打卡信息</p>}

@@ -31,6 +31,7 @@ export const ClockInInfoModalFormColumns: ProFormColumnsType<API.ClockInInfo, "t
     tooltip: "职校家园密码",
     title: '职校家园密码',
     dataIndex: 'clockPassword',
+    valueType:'password',
     key: "clockPassword",
     formItemProps: {
       rules: [
