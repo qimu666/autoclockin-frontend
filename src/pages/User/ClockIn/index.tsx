@@ -21,7 +21,7 @@ import Settings from "../../../../config/defaultSettings";
 import {valueLength} from '@/components/RightContent/AvatarDropdown';
 import Paragraph from "antd/lib/typography/Paragraph";
 
-const generateDeviceId = () => {
+export const generateDeviceId = () => {
   const characters = '0123456789abcdef';
   let deviceId = '';
   for (let i = 0; i < 40; i++) {

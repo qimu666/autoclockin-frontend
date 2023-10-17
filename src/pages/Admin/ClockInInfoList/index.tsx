@@ -4,15 +4,19 @@ import {FooterToolbar, PageContainer, ProTable,} from '@ant-design/pro-component
 import '@umijs/max';
 import {Button, message, Popconfirm} from 'antd';
 import React, {useRef, useState} from 'react';
+
+import {startingClockInUsingPOST, stopClockInUsingPOST} from "@/services/auto-clock-in/clockInController";
+import ModalForm from "@/pages/Admin/ClockInInfoList/components/ModalForm";
+import ClockInInfoModalFormColumns, {
+  AdminClockInInfoModalFormColumns
+} from "@/pages/Admin/ClockInInfoList/components/ClockInColumns";
+import {generateDeviceId} from "@/pages/User/ClockIn";
 import {
   addClockInInfoUsingPOST,
   deleteClockInInfoUsingPOST,
   listClockInInfoByPageUsingGET,
   updateClockInInfoUsingPOST
-} from "@/services/auto-clock-in/clockInInfoController";
-import {startingClockInUsingPOST, stopClockInUsingPOST} from "@/services/auto-clock-in/clockInController";
-import ModalForm from "@/pages/Admin/ClockInInfoList/components/ModalForm";
-import ClockInInfoModalFormColumns from "@/pages/Admin/ClockInInfoList/components/ClockInColumns";
+} from '@/services/auto-clock-in/clockInInfoController';
 
 
 const ClockInInfoList: React.FC = () => {
@@ -281,6 +285,7 @@ const ClockInInfoList: React.FC = () => {
         ) : null,
         record.status === 2 ? (
           <a
+            style={{color: "red"}}
             type="text"
             key="online"
             onClick={() => {
@@ -400,13 +405,13 @@ const ClockInInfoList: React.FC = () => {
 
       <ModalForm
         title={"添加打卡信息"}
-        value={{}}
+        value={{deviceId: generateDeviceId()}}
         open={() => {
           return createModalOpen;
         }}
         onOpenChange={handleModalOpen}
         onSubmit={async (value) => {
-          const success = await handleAdd(value as API.ClockInInfo);
+          const success = await handleAdd(value as API.ClockInInfoAddRequest);
           if (success) {
             handleModalOpen(false);
             if (actionRef.current) {
@@ -415,7 +420,7 @@ const ClockInInfoList: React.FC = () => {
           }
         }}
         onCancel={() => handleModalOpen(false)}
-        columns={ClockInInfoModalFormColumns} width={"480px"}
+        columns={AdminClockInInfoModalFormColumns} width={"480px"}
         size={"large"}
       />
       <ModalForm
