@@ -38,7 +38,7 @@ export async function getClockInInfoByIdUsingGET(
   params: API.getClockInInfoByIdUsingGETParams,
   options?: { [key: string]: any },
 ) {
-  return request<API.BaseResponseClockInInfoVo>('/api/clockInInfo/get', {
+  return request<API.BaseResponseClockInInfo>('/api/clockInInfo/get', {
     method: 'GET',
     params: {
       ...params,
@@ -79,7 +79,7 @@ export async function listClockInInfoByPageUsingGET(
 
 /** getClockInInfoByLoginUserId GET /api/clockInInfo/login/get */
 export async function getClockInInfoByLoginUserIdUsingGET(options?: { [key: string]: any }) {
-  return request<API.BaseResponseClockInInfo>('/api/clockInInfo/login/get', {
+  return request<API.BaseResponseClockInInfoVo>('/api/clockInInfo/login/get', {
     method: 'GET',
     ...(options || {}),
   });

@@ -83,6 +83,7 @@ declare namespace API {
     clockPassword?: string;
     deviceId?: string;
     deviceType?: string;
+    userAccount?: string;
   };
 
   type ClockInInfoUpdateRequest = {
