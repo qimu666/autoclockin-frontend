@@ -84,8 +84,7 @@ export const ClockInInfoModalFormColumns: ProFormColumnsType<API.ClockInInfo, "t
   },
   {
     tooltip: "设备ID",
-    title: <span>真实设备id,或者<a target={"_blank"} href={'http://did.sxba.xuanran.cc/'}
-                                   rel="noreferrer">点我获取随机设备ID,获取后填入</a></span>,
+    title: '真实设备id,或者使用如下随机设备ID',
     dataIndex: 'deviceId',
     key: "deviceId",
     formItemProps: {
@@ -221,8 +220,7 @@ export const AdminClockInInfoModalFormColumns: ProFormColumnsType<API.ClockInInf
   },
   {
     tooltip: "设备ID",
-    title: <span>真实设备id,或者<a target={"_blank"} href={'http://did.sxba.xuanran.cc/'}
-                                   rel="noreferrer">点我获取随机设备ID,获取后填入</a></span>,
+    title: '真实设备id,或者使用如下随机设备ID',
     dataIndex: 'deviceId',
     key: "deviceId",
     formItemProps: {
