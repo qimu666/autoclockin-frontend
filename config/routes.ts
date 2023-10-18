@@ -10,6 +10,7 @@
     ],
   },
   {path: '/clockIn', name: '打卡信息', icon:'LoginOutlined', component: './User/ClockIn'},
+  {path: '/clockIn/:id', name: '打卡信息', icon:'LoginOutlined', component: './User/ClockIn',hideInMenu: true,},
   {
     path: '/admin',
     name: '管理页',

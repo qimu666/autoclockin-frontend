@@ -17,6 +17,7 @@ import {
   listClockInInfoByPageUsingGET,
   updateClockInInfoUsingPOST
 } from '@/services/auto-clock-in/clockInInfoController';
+import {Link} from "@@/exports";
 
 
 const ClockInInfoList: React.FC = () => {
@@ -185,6 +186,11 @@ const ClockInInfoList: React.FC = () => {
       copyable: true,
       valueType: 'text',
       ellipsis: true,
+      render: (_, record) => (
+        <Link key={record.id} to={`/clockIn/${record.id}`}>
+          {record.clockInAccount}
+        </Link>
+      ),
     },
     {
       title: '打卡密码',

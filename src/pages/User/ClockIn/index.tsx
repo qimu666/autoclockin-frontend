@@ -8,6 +8,7 @@ import {
 } from "@/services/auto-clock-in/clockInController";
 import {
   addClockInInfoUsingPOST,
+  getClockInInfoByIdUsingGET,
   getClockInInfoByLoginUserIdUsingGET,
   updateClockInInfoUsingPOST
 } from "@/services/auto-clock-in/clockInInfoController";
@@ -20,6 +21,7 @@ import {userBindEmailUsingPOST, userUnBindEmailUsingPOST} from "@/services/auto-
 import Settings from "../../../../config/defaultSettings";
 import {valueLength} from '@/components/RightContent/AvatarDropdown';
 import Paragraph from "antd/lib/typography/Paragraph";
+import {useParams} from "@@/exports";
 
 export const generateDeviceId = () => {
   const characters = '0123456789abcdef';
@@ -29,6 +31,7 @@ export const generateDeviceId = () => {
   }
   return deviceId;
 }
+
 const formatDate = (dateString: any) => {
   const date = new Date(dateString);
   const year = date.getFullYear();
@@ -48,7 +51,7 @@ const ClockIn: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [notWrite, setNotWrite] = useState(false);
   const [openEmailModal, setOpenEmailModal] = useState(false);
-
+  const params = useParams()
 
   const statusEnum: any = {
     0: "未开启",
@@ -64,10 +67,7 @@ const ClockIn: React.FC = () => {
       return
     }
   }
-
-  const loadedData = async () => {
-    await isNotWrite()
-    setLoading(true)
+  const getClockInInfoVoByLoginUser = async () => {
     try {
       const res = await getClockInInfoByLoginUserIdUsingGET()
       if (res.data && res.code === 0) {
@@ -77,6 +77,29 @@ const ClockIn: React.FC = () => {
     } catch (e: any) {
       message.error(e.message)
     }
+  }
+  const getClockInInfoVoById = async (id: string) => {
+    try {
+      // @ts-ignore
+      const res = await getClockInInfoByIdUsingGET({id: id})
+      if (res.data && res.code === 0) {
+        setDate(res.data || {})
+        setNotWrite(false)
+      }
+    } catch (e: any) {
+      message.error(e.message)
+    }
+  }
+
+  const loadedData = async () => {
+    await isNotWrite()
+    setLoading(true)
+    if (!params.id) {
+      await getClockInInfoVoByLoginUser()
+    } else {
+      await getClockInInfoVoById(params.id)
+    }
+
     setLoading(false)
   }
 
