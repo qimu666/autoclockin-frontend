@@ -301,6 +301,17 @@ const ClockInInfoList: React.FC = () => {
             暂停打卡
           </a>
         ) : null,
+        record.status === 3 ? (
+          <a
+            type="text"
+            key="auditing"
+            onClick={() => {
+              handleOnline(record);
+            }}
+          >
+            打卡重试
+          </a>
+        ) : null,
         record.status === 1 ? (
           <a
             type="text"
