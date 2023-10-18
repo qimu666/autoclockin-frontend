@@ -17,7 +17,11 @@ import ModalForm from "@/pages/Admin/ClockInInfoList/components/ModalForm";
 import ClockInInfoModalFormColumns from "@/pages/Admin/ClockInInfoList/components/ClockInColumns";
 import {useModel} from "@umijs/max";
 import EmailModal from "@/components/EmailModal";
-import {userBindEmailUsingPOST, userUnBindEmailUsingPOST} from "@/services/auto-clock-in/userController";
+import {
+  getUserByIdUsingGET,
+  userBindEmailUsingPOST,
+  userUnBindEmailUsingPOST
+} from "@/services/auto-clock-in/userController";
 import Settings from "../../../../config/defaultSettings";
 import {valueLength} from '@/components/RightContent/AvatarDropdown';
 import Paragraph from "antd/lib/typography/Paragraph";
@@ -48,6 +52,7 @@ const ClockIn: React.FC = () => {
   const [updateModalOpen, handleUpdateModalOpen] = useState<boolean>(false);
   const {initialState, setInitialState} = useModel('@@initialState');
   const {loginUser} = initialState || {}
+  const [userData, setUserData] = useState<API.UserVO>();
   const [loading, setLoading] = useState(false);
   const [notWrite, setNotWrite] = useState(false);
   const [openEmailModal, setOpenEmailModal] = useState(false);
@@ -74,6 +79,7 @@ const ClockIn: React.FC = () => {
         setDate(res.data || {})
         setNotWrite(false)
       }
+      setUserData(loginUser)
     } catch (e: any) {
       message.error(e.message)
     }
@@ -84,6 +90,8 @@ const ClockIn: React.FC = () => {
       const res = await getClockInInfoByIdUsingGET({id: id})
       if (res.data && res.code === 0) {
         setDate(res.data || {})
+        const resUser = await getUserByIdUsingGET({id: res.data.userId})
+        setUserData(resUser.data)
         setNotWrite(false)
       }
     } catch (e: any) {
@@ -105,9 +113,18 @@ const ClockIn: React.FC = () => {
 
   useEffect(() => {
       loadedData()
+      if (userData && !valueLength(userData?.email)) {
+        setOpenEmailModal(true)
+      }
     },
     [])
 
+  useEffect(() => {
+      if (userData && loginUser?.id === userData?.id &&!valueLength(userData?.email)) {
+        setOpenEmailModal(true)
+      }
+    },
+    [userData])
   const handleBindEmailSubmit = async (values: API.UserBindEmailRequest) => {
     try {
       // 绑定邮箱
@@ -198,9 +215,9 @@ const ClockIn: React.FC = () => {
       key: '7',
       label: '通知邮箱',
       children: <Paragraph
-        copyable={valueLength(loginUser?.email)}
+        copyable={valueLength(userData?.email)}
       >
-        {valueLength(loginUser?.email) ? loginUser?.email : '未绑定邮箱'}
+        {valueLength(userData?.email) ? userData?.email : '未绑定邮箱'}
       </Paragraph>,
     },
     {
@@ -250,13 +267,13 @@ const ClockIn: React.FC = () => {
 
   return (
     <>
-      <Card title={'我的打卡信息'} extra={
+      <Card title={'我的打卡信息'} extra={loginUser?.id === userData?.id &&
         <>
           <Tooltip title={"用于接收打卡通知信息"}>
             <Button onClick={() => {
               setOpenEmailModal(true)
             }
-            }>{loginUser?.email ? '更新邮箱' : "绑定邮箱"}</Button>
+            }>{userData?.email ? '更新邮箱' : "绑定邮箱"}</Button>
           </Tooltip>
         </>
       } hoverable={true} actions={[<>
@@ -274,7 +291,7 @@ const ClockIn: React.FC = () => {
             <span onClick={async () => {
               const res = await startingClockInUsingPOST({id: data?.id})
               if (res.data && res.code === 0) {
-                if (!loginUser?.email) {
+                if (!userData?.email) {
                   message.error("您未绑定邮箱，将无法接收到打卡通知！")
                 }
                 await toClockInUsingPOST()
@@ -322,7 +339,7 @@ const ClockIn: React.FC = () => {
             <span onClick={async () => {
               const res = await startingClockInUsingPOST({id: data?.id})
               if (res.data && res.code === 0) {
-                if (!loginUser?.email) {
+                if (!userData?.email) {
                   message.error("您未绑定邮箱，将无法接收到打卡通知！")
                 }
                 await toClockInUsingPOST()
@@ -365,7 +382,7 @@ const ClockIn: React.FC = () => {
         onCancel={() => handleUpdateModalOpen(false)}
         columns={ClockInInfoModalFormColumns} width={"400px"}
       />
-      <EmailModal unbindSubmit={handleUnBindEmailSubmit} bindSubmit={handleBindEmailSubmit} data={loginUser}
+      <EmailModal unbindSubmit={handleUnBindEmailSubmit} bindSubmit={handleBindEmailSubmit} data={userData}
                   onCancel={() => setOpenEmailModal(false)}
                   open={openEmailModal}/>
     </>
