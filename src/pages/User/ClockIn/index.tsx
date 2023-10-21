@@ -53,7 +53,6 @@ const ClockIn: React.FC = () => {
   const {initialState, setInitialState} = useModel('@@initialState');
   const {loginUser} = initialState || {}
   const [userData, setUserData] = useState<API.UserVO>();
-  const [loading, setLoading] = useState(false);
   const [notWrite, setNotWrite] = useState(false);
   const [openEmailModal, setOpenEmailModal] = useState(false);
   const params = useParams()
@@ -90,6 +89,7 @@ const ClockIn: React.FC = () => {
       const res = await getClockInInfoByIdUsingGET({id: id})
       if (res.data && res.code === 0) {
         setDate(res.data || {})
+        // @ts-ignore
         const resUser = await getUserByIdUsingGET({id: res.data.userId})
         setUserData(resUser.data)
         setNotWrite(false)
@@ -101,14 +101,11 @@ const ClockIn: React.FC = () => {
 
   const loadedData = async () => {
     await isNotWrite()
-    setLoading(true)
     if (!params.id) {
       await getClockInInfoVoByLoginUser()
     } else {
       await getClockInInfoVoById(params.id)
     }
-
-    setLoading(false)
   }
 
   useEffect(() => {
@@ -120,7 +117,7 @@ const ClockIn: React.FC = () => {
     [])
 
   useEffect(() => {
-      if (userData && loginUser?.id === userData?.id &&!valueLength(userData?.email)) {
+      if (userData && loginUser?.id === userData?.id && !valueLength(userData?.email)) {
         setOpenEmailModal(true)
       }
     },

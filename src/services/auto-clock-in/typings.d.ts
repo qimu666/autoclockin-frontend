@@ -5,12 +5,6 @@ declare namespace API {
     message?: string;
   };
 
-  type BaseResponseClockInInfo = {
-    code?: number;
-    data?: ClockInInfo;
-    message?: string;
-  };
-
   type BaseResponseClockInInfoVo = {
     code?: number;
     data?: ClockInInfoVo;
@@ -69,6 +63,7 @@ declare namespace API {
     deviceType?: string;
     id?: number;
     isDelete?: number;
+    isEnable?: number;
     latitude?: string;
     longitude?: string;
     status?: number;
@@ -109,6 +104,7 @@ declare namespace API {
     deviceId?: string;
     deviceType?: string;
     id?: number;
+    isEnable?: number;
     latitude?: string;
     longitude?: string;
     status?: number;
@@ -127,12 +123,12 @@ declare namespace API {
 
   type getClockInInfoByIdUsingGETParams = {
     /** id */
-    id?: number;
+    id?: string;
   };
 
   type getUserByIdUsingGETParams = {
     /** id */
-    id?: number;
+    id?: string;
   };
 
   type IdRequest = {
