@@ -10,6 +10,33 @@ export async function isNotWriteUsingPOST(options?: { [key: string]: any }) {
   });
 }
 
+/** startingIpPool POST /api/ClockIn/pool/starting */
+export async function startingIpPoolUsingPOST(
+  body: API.IdRequest,
+  options?: { [key: string]: any },
+) {
+  return request<API.BaseResponseboolean>('/api/ClockIn/pool/starting', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+
+/** stopIpPool POST /api/ClockIn/pool/stop */
+export async function stopIpPoolUsingPOST(body: API.IdRequest, options?: { [key: string]: any }) {
+  return request<API.BaseResponseboolean>('/api/ClockIn/pool/stop', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+
 /** startingClockIn POST /api/ClockIn/starting */
 export async function startingClockInUsingPOST(
   body: API.IdRequest,

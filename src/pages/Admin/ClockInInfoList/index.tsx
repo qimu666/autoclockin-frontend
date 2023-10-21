@@ -5,7 +5,12 @@ import '@umijs/max';
 import {Button, message, Popconfirm} from 'antd';
 import React, {useRef, useState} from 'react';
 
-import {startingClockInUsingPOST, stopClockInUsingPOST} from "@/services/auto-clock-in/clockInController";
+import {
+  startingClockInUsingPOST,
+  startingIpPoolUsingPOST,
+  stopClockInUsingPOST,
+  stopIpPoolUsingPOST
+} from "@/services/auto-clock-in/clockInController";
 import ModalForm from "@/pages/Admin/ClockInInfoList/components/ModalForm";
 import ClockInInfoModalFormColumns, {
   AdminClockInInfoModalFormColumns
@@ -124,6 +129,59 @@ const ClockInInfoList: React.FC = () => {
       hide();
       if (res.data) {
         message.success('暂停成功');
+        actionRef.current?.reload();
+      }
+      return true;
+    } catch (error: any) {
+      hide();
+      message.error(error.message);
+      return false;
+    }
+  };
+
+
+  /**
+   * @en-US Update node
+   * @zh-CN 发布
+   *
+   * @param record
+   */
+  const handlePoolOnline = async (record: API.IdRequest) => {
+    const hide = message.loading('启动中');
+    if (!record) return true;
+    try {
+      const res = await startingIpPoolUsingPOST({
+        id: record.id,
+      });
+      hide();
+      if (res.data) {
+        message.success('IP池开启成功');
+        actionRef.current?.reload();
+      }
+      return true;
+    } catch (error: any) {
+      hide();
+      message.error(error.message);
+      return false;
+    }
+  };
+
+  /**
+   * @en-US Update node
+   * @zh-CN 下线
+   *
+   * @param record
+   */
+  const handlePoolOffline = async (record: API.IdRequest) => {
+    const hide = message.loading('暂停中');
+    if (!record) return true;
+    try {
+      const res = await stopIpPoolUsingPOST({
+        id: record.id,
+      });
+      hide();
+      if (res.data) {
+        message.success('IP池关闭成功');
         actionRef.current?.reload();
       }
       return true;
@@ -253,6 +311,23 @@ const ClockInInfoList: React.FC = () => {
       },
     },
     {
+      title: 'IP池是否启用',
+      filters: true,
+      onFilter: true,
+      dataIndex: 'isEnable',
+      key: 'isEnable',
+      valueEnum: {
+        0: {
+          text: '未开启',
+          status: 'Default',
+        },
+        1: {
+          text: '已启用',
+          status: 'Success',
+        },
+      },
+    },
+    {
       title: '打卡时间',
       dataIndex: 'clockInTime',
       valueType: 'time',
@@ -293,9 +368,9 @@ const ClockInInfoList: React.FC = () => {
           <a
             style={{color: "red"}}
             type="text"
-            key="online"
+            key="offline"
             onClick={() => {
-              handleOnline(record);
+              handleOffline(record);
             }}
           >
             暂停打卡
@@ -304,7 +379,7 @@ const ClockInInfoList: React.FC = () => {
         record.status === 3 ? (
           <a
             type="text"
-            key="auditing"
+            key="retry"
             onClick={() => {
               handleOnline(record);
             }}
@@ -322,6 +397,29 @@ const ClockInInfoList: React.FC = () => {
             }}
           >
             暂停打卡
+          </a>
+        ) : null,
+        record.isEnable === 0 ? (
+          <a
+            type="text"
+            key="poolAuditing"
+            onClick={() => {
+              handlePoolOnline(record);
+            }}
+          >
+            开启IP池
+          </a>
+        ) : null,
+        record.isEnable === 1 ? (
+          <a
+            style={{color: "red"}}
+            type="text"
+            key="poolOnline"
+            onClick={() => {
+              handlePoolOffline(record);
+            }}
+          >
+            关闭IP池
           </a>
         ) : null,
         <Popconfirm
