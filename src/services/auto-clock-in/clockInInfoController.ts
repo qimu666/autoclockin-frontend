@@ -62,6 +62,21 @@ export async function listClockInInfoUsingGET(
   });
 }
 
+/** listMyClockInInfoByPage GET /api/clockInInfo/list/myClockInInfo */
+export async function listMyClockInInfoByPageUsingGET(
+  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
+  params: API.listMyClockInInfoByPageUsingGETParams,
+  options?: { [key: string]: any },
+) {
+  return request<API.BaseResponsePageClockInInfo>('/api/clockInInfo/list/myClockInInfo', {
+    method: 'GET',
+    params: {
+      ...params,
+    },
+    ...(options || {}),
+  });
+}
+
 /** listClockInInfoByPage GET /api/clockInInfo/list/page */
 export async function listClockInInfoByPageUsingGET(
   // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)

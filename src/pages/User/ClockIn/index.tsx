@@ -27,6 +27,7 @@ import {valueLength} from '@/components/RightContent/AvatarDropdown';
 import Paragraph from "antd/lib/typography/Paragraph";
 import {useParams} from "@@/exports";
 
+
 export const generateDeviceId = () => {
   const characters = '0123456789abcdef';
   let deviceId = '';
@@ -66,8 +67,8 @@ const ClockIn: React.FC = () => {
   const isNotWrite = async () => {
     const isWrite = await isNotWriteUsingPOST();
     if (isWrite.data) {
-      setNotWrite(true)
       handleModalOpen(true)
+      setNotWrite(true)
       return
     }
   }
@@ -75,7 +76,7 @@ const ClockIn: React.FC = () => {
     try {
       const res = await getClockInInfoByLoginUserIdUsingGET()
       if (res.data && res.code === 0) {
-        setDate(res.data || {})
+        setDate(res.data)
         setNotWrite(false)
       }
       setUserData(loginUser)
@@ -88,7 +89,7 @@ const ClockIn: React.FC = () => {
       // @ts-ignore
       const res = await getClockInInfoByIdUsingGET({id: id})
       if (res.data && res.code === 0) {
-        setDate(res.data || {})
+        setDate(res.data)
         // @ts-ignore
         const resUser = await getUserByIdUsingGET({id: res.data.userId})
         setUserData(resUser.data)
@@ -110,18 +111,8 @@ const ClockIn: React.FC = () => {
 
   useEffect(() => {
       loadedData()
-      if (userData && !valueLength(userData?.email)) {
-        setOpenEmailModal(true)
-      }
     },
     [])
-
-  useEffect(() => {
-      if (userData && loginUser?.id === userData?.id && !valueLength(userData?.email)) {
-        setOpenEmailModal(true)
-      }
-    },
-    [userData])
   const handleBindEmailSubmit = async (values: API.UserBindEmailRequest) => {
     try {
       // 绑定邮箱
@@ -264,7 +255,8 @@ const ClockIn: React.FC = () => {
 
   return (
     <>
-      <Card title={'我的打卡信息'} extra={loginUser?.id === userData?.id &&
+      <Card title={'我的打卡信息'} extra={<>
+        {loginUser?.id === userData?.id &&
         <>
           <Tooltip title={"用于接收打卡通知信息"}>
             <Button onClick={() => {
@@ -273,7 +265,7 @@ const ClockIn: React.FC = () => {
             }>{userData?.email ? '更新邮箱' : "绑定邮箱"}</Button>
           </Tooltip>
         </>
-      } hoverable={true} actions={[<>
+      }</>} hoverable={true} actions={[<>
         <span onClick={() => {
           if (notWrite) {
             message.error("请先添加打卡信息")
@@ -288,10 +280,7 @@ const ClockIn: React.FC = () => {
             <span onClick={async () => {
               const res = await startingClockInUsingPOST({id: data?.id})
               if (res.data && res.code === 0) {
-                if (!userData?.email) {
-                  message.error("您未绑定邮箱，将无法接收到打卡通知！")
-                }
-                await toClockInUsingPOST()
+                await toClockInUsingPOST({id:data.id})
                 message.success('打卡开启成功');
                 setTimeout(() => {
                   loadedData()
@@ -336,10 +325,7 @@ const ClockIn: React.FC = () => {
             <span onClick={async () => {
               const res = await startingClockInUsingPOST({id: data?.id})
               if (res.data && res.code === 0) {
-                if (!userData?.email) {
-                  message.error("您未绑定邮箱，将无法接收到打卡通知！")
-                }
-                await toClockInUsingPOST()
+                await toClockInUsingPOST({id:data.id})
                 message.success('打卡开启成功');
                 setTimeout(() => {
                   loadedData()
@@ -354,6 +340,7 @@ const ClockIn: React.FC = () => {
         {data ? <Descriptions column={1} items={items}/> : <p>暂无打卡信息</p>}
       </Card>
       <ModalForm
+        isAdd={true}
         title={"添加打卡信息"}
         value={{deviceId: generateDeviceId()}}
         open={() => {
@@ -367,6 +354,7 @@ const ClockIn: React.FC = () => {
         columns={ClockInInfoModalFormColumns} width={"400px"}
       />
       <ModalForm
+        isAdd={true}
         title={"修改打卡信息"}
         value={data}
         open={() => {
