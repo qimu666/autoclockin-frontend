@@ -1,4 +1,5 @@
 import {ProFormColumnsType} from '@ant-design/pro-components';
+import React from "react";
 
 
 export const ClockInInfoModalFormColumns: ProFormColumnsType<API.ClockInInfo, "text">[] = [
@@ -128,24 +129,6 @@ export const AdminClockInInfoModalFormColumns: ProFormColumnsType<API.ClockInInf
     key: "id"
   },
   {
-    tooltip: "该自动打卡平台登录账号",
-    title: '该自动打卡平台登录账号',
-    dataIndex: 'userAccount',
-    key: "userAccount",
-    formItemProps: {
-      rules: [
-        {
-          required: true,
-          message: '自动打卡平台账号',
-        },
-      ],
-    },
-    width: 'lg',
-    colProps: {
-      span: 24,
-    },
-  },
-  {
     tooltip: "职校家园账号",
     title: '职校家园账号',
     dataIndex: 'clockInAccount',
@@ -252,6 +235,31 @@ export const AdminClockInInfoModalFormColumns: ProFormColumnsType<API.ClockInInf
     width: 'lg',
     colProps: {
       span: 24,
+    },
+  },  {
+    tooltip: "该自动打卡平台登录账号",
+    title: '该自动打卡平台登录账号（可选）',
+    dataIndex: 'userAccount',
+    key: "userAccount",
+    width: 'lg',
+    colProps: {
+      span: 24,
+    },
+  },
+  {
+    tooltip: "通知邮箱",
+    title: '通知邮箱：仔细核对（可选）',
+    dataIndex: 'email',
+    key: "email",
+    width: 'lg',
+    colProps: {
+      span: 24,
+    },
+    formItemProps: {
+      rules:[{
+        pattern: /^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$/,
+        message: '不合法的邮箱账号！',
+       },]
     },
   },
 ];

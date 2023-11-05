@@ -64,10 +64,29 @@ export async function stopClockInUsingPOST(body: API.IdRequest, options?: { [key
   });
 }
 
+/** supplementClockIn POST /api/ClockIn/supplementClockIn */
+export async function supplementClockInUsingPOST(
+  body: API.IdRequest,
+  options?: { [key: string]: any },
+) {
+  return request<API.BaseResponseboolean>('/api/ClockIn/supplementClockIn', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+
 /** toClockIn POST /api/ClockIn/toClockIn */
-export async function toClockInUsingPOST(options?: { [key: string]: any }) {
+export async function toClockInUsingPOST(body: API.IdRequest, options?: { [key: string]: any }) {
   return request<API.BaseResponseboolean>('/api/ClockIn/toClockIn', {
     method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
     ...(options || {}),
   });
 }

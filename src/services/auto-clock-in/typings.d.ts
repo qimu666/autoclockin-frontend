@@ -163,6 +163,20 @@ declare namespace API {
     userId?: number;
   };
 
+  type listMyClockInInfoByPageUsingGETParams = {
+    address?: string;
+    current?: number;
+    deviceId?: string;
+    deviceType?: string;
+    latitude?: string;
+    longitude?: string;
+    pageSize?: number;
+    sortField?: string;
+    sortOrder?: string;
+    status?: number;
+    userId?: number;
+  };
+
   type listUserByPageUsingGETParams = {
     createTime?: string;
     current?: number;

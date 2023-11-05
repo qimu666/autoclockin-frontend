@@ -18,7 +18,7 @@ interface ResponseStructure {
  */
 export const requestConfig: RequestConfig = {
   // todo 请求url配置
-  baseURL: process.env.NODE_ENV === 'production' ? "https://api.qimuu.icu/" : 'http://localhost:7529/',
+  baseURL: process.env.NODE_ENV === 'production' ? "http://47.113.151.4:9810/" : 'http://localhost:7529/',
   withCredentials: true,
 
   // 请求拦截器

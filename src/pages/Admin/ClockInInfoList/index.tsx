@@ -9,7 +9,8 @@ import {
   startingClockInUsingPOST,
   startingIpPoolUsingPOST,
   stopClockInUsingPOST,
-  stopIpPoolUsingPOST
+  stopIpPoolUsingPOST,
+  supplementClockInUsingPOST
 } from "@/services/auto-clock-in/clockInController";
 import ModalForm from "@/pages/Admin/ClockInInfoList/components/ModalForm";
 import ClockInInfoModalFormColumns, {
@@ -86,7 +87,28 @@ const ClockInInfoList: React.FC = () => {
     }
   };
 
-
+  const handleSupplementClockIn = async (record: API.IdRequest) => {
+    const hide = message.loading('一键打卡开启中');
+    if (!record) return true;
+    try {
+      const resStart = await startingClockInUsingPOST({
+        id: record.id,
+      });
+      const res = await supplementClockInUsingPOST({
+        id: record.id,
+      });
+      hide();
+      if (res.data &&resStart.data) {
+        message.success('一键打卡开启成功，将在30秒后打卡');
+        actionRef.current?.reload();
+      }
+      return true;
+    } catch (error: any) {
+      hide();
+      message.error(error.message);
+      return false;
+    }
+  }
   /**
    * @en-US Update node
    * @zh-CN 发布
@@ -255,15 +277,16 @@ const ClockInInfoList: React.FC = () => {
       dataIndex: 'clockPassword',
       copyable: true,
       valueType: 'text',
+      search:false,
       ellipsis: true,
     },
-    {
-      title: '设备ID',
-      dataIndex: 'deviceId',
-      valueType: 'text',
-      ellipsis: true,
-      copyable: true,
-    },
+    // {
+    //   title: '设备ID',
+    //   dataIndex: 'deviceId',
+    //   valueType: 'text',
+    //   ellipsis: true,
+    //   copyable: true,
+    // },
     {
       title: '设备类型',
       dataIndex: 'deviceType',
@@ -333,12 +356,12 @@ const ClockInInfoList: React.FC = () => {
       valueType: 'time',
       key: 'clockInTime',
     },
-    {
-      title: '创建时间',
-      dataIndex: 'createTime',
-      valueType: 'dateTime',
-      key: 'createTime',
-    },
+    // {
+    //   title: '创建时间',
+    //   dataIndex: 'createTime',
+    //   valueType: 'dateTime',
+    //   key: 'createTime',
+    // },
     {
       title: '操作',
       dataIndex: 'option',
@@ -347,6 +370,7 @@ const ClockInInfoList: React.FC = () => {
         <a
           key="update"
           onClick={() => {
+            console.log(record,'record')
             setCurrentRow(record);
             handleUpdateModalOpen(true);
           }}
@@ -377,7 +401,7 @@ const ClockInInfoList: React.FC = () => {
           </a>
         ) : null,
         record.status === 3 ? (
-          <a
+          <><a
             type="text"
             key="retry"
             onClick={() => {
@@ -386,6 +410,7 @@ const ClockInInfoList: React.FC = () => {
           >
             打卡重试
           </a>
+          </>
         ) : null,
         record.status === 1 ? (
           <a
@@ -422,6 +447,9 @@ const ClockInInfoList: React.FC = () => {
             关闭IP池
           </a>
         ) : null,
+        <a type={"text"} key={"supplementClockIn"} onClick={()=>{
+          handleSupplementClockIn(record);
+        }}>一键打卡</a>,
         <Popconfirm
           key={'Delete'}
           title="请确认是否删除该打卡信息!"
@@ -519,6 +547,7 @@ const ClockInInfoList: React.FC = () => {
       )}
 
       <ModalForm
+        isAdd={true}
         title={"添加打卡信息"}
         value={{deviceId: generateDeviceId()}}
         open={() => {

@@ -17,7 +17,7 @@
     icon: 'crown',
     access: 'canAdmin',
     routes: [
-      {name: '打卡列表', icon: 'table', path: '/admin/list', component: './Admin/ClockInInfoList'},
+      {name: '打卡管理列表', icon: 'table', path: '/admin/list', component: './Admin/ClockInInfoList'},
     ],
   },
   {path: '/', redirect: '/clockIn'},
